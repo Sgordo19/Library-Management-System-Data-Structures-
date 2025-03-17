@@ -138,7 +138,7 @@ public class PatronLinkedList implements Serializable{
         PatronNode curr = head;
         while (curr != null) {
             Patron patron = curr.getData();
-            if (patron != null && patron.getUsername() != null && patron.getUsername().equalsIgnoreCase(username)) {
+            if (patron != null && patron.getUsername() != null && patron.getUsername().equals(username)) {
                 return patron;
             }
             curr = curr.getNextNode();
@@ -302,7 +302,7 @@ public class PatronLinkedList implements Serializable{
     	    while (curr != null) {
     	        Patron patron = curr.getData(); // Get the patron object
 
-    	        if (patron != null && patron.getUsername() != null && patron.getUsername().equalsIgnoreCase(username)) {
+    	        if (patron != null && patron.getUsername() != null && patron.getUsername().equals(username)) {
     	        	 System.out.println("Patron with username: " + username + " found.");
     	            return patron; // Return the found patron
     	        }
