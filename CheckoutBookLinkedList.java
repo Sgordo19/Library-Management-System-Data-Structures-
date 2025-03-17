@@ -261,6 +261,19 @@ public class CheckoutBookLinkedList implements Serializable {
         }
         return dataToReturn; 
     } // End of DeleteNode Method
-    
+
+	public String displayListString() {
+    StringBuilder sb = new StringBuilder();
+    BookNode curr = head;
+    if (curr == null) {
+        sb.append("No books checked out.");
+    } else {
+        while (curr != null) {
+            sb.append(curr.getData().toString()).append("\n");
+            curr = curr.getNextNode();
+        }
+    }
+    return sb.toString();
+}
     
 }
