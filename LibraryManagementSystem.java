@@ -31,6 +31,7 @@ public class LibraryManagementSystem
     
     //Login/Register Function
     public static void loginRegis() {
+    	String value = " ";
     	clearScreen(); 
     	Scanner scanner = new Scanner(System.in);
         Logins_Registrationmethods login = new Logins_Registrationmethods();
@@ -41,6 +42,13 @@ public class LibraryManagementSystem
         	adminSection(scanner);
         }else if(patron != null && !patron.getUsername().equalsIgnoreCase("admin")) {
         	patronSection(scanner,patron);
+        }else if(patron == null) {
+        	System.out.println("\nPress a key to go back to menu....");
+    		while(value.equals(" ")) {
+    			value = scanner.next();
+    		}
+    		
+    		loginRegis();
         }
     }
     
