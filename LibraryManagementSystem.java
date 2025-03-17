@@ -33,9 +33,9 @@ Shavon Gordon: 2306989
 	        displayLMS(); 
 	        Patron patron = login.Logins(null, null);
 	        
-	        if(patron != null && patron.getUsername().equalsIgnoreCase("admin")) {
+	        if(patron != null && patron.getUsername().equals("admin")) {
 	        	adminSection(scanner);
-	        }else if(patron != null && !patron.getUsername().equalsIgnoreCase("admin")) {
+	        }else if(patron != null && !patron.getUsername().equals("admin")) {
 	        	patronSection(scanner,patron);
 	        }else if(patron == null) {
 	        	System.out.println("\nPress a key to go back to menu....");
@@ -143,7 +143,7 @@ Shavon Gordon: 2306989
 	        		adminSection(scanner); 
 	                break;
 	            case 5:
-	            	System.out.println("Total Patrons registered in the System is: " + Logins_Registrationmethods.patroncount);
+	            	System.out.println("Total Patrons registered in the System is: " + patronList.CountNode());
 	            	System.out.println("\nPress a key to go to menu....");// the above display total patron registered
 	        		while(value.equals(" ")) {
 	        			value = scanner.next();
@@ -292,7 +292,7 @@ Shavon Gordon: 2306989
 	              			bookC =  bookManagement1.searchByTitle(tempTitle);
 	              		 if(bookC == null) {
 	              				System.out.println("\nNo book of that title is available in the library");
-	              				//Call menu function
+	              				
 	              			}else {
 	              				if(bookC.isAvailable()) {
 	              					bookS.push(bookC);
