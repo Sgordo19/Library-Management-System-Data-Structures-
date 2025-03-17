@@ -1,5 +1,3 @@
-package librarySystemsProject;
-
 /*
 Names: 
 Jade Freeman: 2300078
@@ -8,6 +6,7 @@ Tonique Haywood: 2301114
 Anttwone Marsh: 2304211
 Jordon Taylor: 2304907
 */
+package librarySystemsProject;
 
 public class Logins_Registrationmethods {
     public static int patroncount = 0; // Keep track of registered users
@@ -16,7 +15,7 @@ public class Logins_Registrationmethods {
         // Constructor can remain empty or initialize something if needed
     }
 
-    // Main login method for console (kept for compatibility)
+    // Main login method for console 
     public Patron Logins(String username, String password) {
         java.util.Scanner scanner = new java.util.Scanner(System.in);
         boolean loggedIn = false;
@@ -109,7 +108,7 @@ public class Logins_Registrationmethods {
         return user != null && user.isFirstLogin();
     }
 
-    // Private helper methods
+  //Register user method with parameter scanner
     public void registerUser(java.util.Scanner scanner) {
         System.out.print("Enter a unique Username: ");
         String username = scanner.nextLine();
@@ -131,6 +130,7 @@ public class Logins_Registrationmethods {
         System.out.println("User registered successfully.");
     }
 
+    //login user method with parameter scanner
     private boolean loginUser(java.util.Scanner scanner) {
         System.out.print("Enter Username: ");
         String username = scanner.nextLine();
@@ -159,6 +159,7 @@ public class Logins_Registrationmethods {
         }
     }
 
+    // Change Password on First login Method
     private void changePasswordOnFirstLogin(Password user, java.util.Scanner scanner) {
         System.out.println("\nWe would now like you to change your password!");
         System.out.println("Password must be 8 characters long and contain at least (1) Capital letter, common letters, numbers, and special symbols.");
@@ -175,6 +176,7 @@ public class Logins_Registrationmethods {
         user.setFirstLogin(false);
     }
 
+    // Offer Password Change method
     private void offerPasswordChange(Password user, java.util.Scanner scanner) {
         System.out.println("\nWould you like to change your password?");
         System.out.println("1. Yes\n2. No");
@@ -188,9 +190,7 @@ public class Logins_Registrationmethods {
             String newPassword = scanner.nextLine();
             user.changePassword(newPassword);
         }
-    }
-
-    
+    }  
 }
 
 
