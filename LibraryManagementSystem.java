@@ -26,8 +26,8 @@ public class LibraryManagementSystem
         
         Logins_Registrationmethods login = new Logins_Registrationmethods();
         displayLMS(); 
-        login.Logins(null, null);
-        displayMainMenu(); 
+        Patron patron = login.Logins(null, null);
+        displayMainMenu(patron); 
         
     }
     
@@ -57,7 +57,7 @@ public class LibraryManagementSystem
 
 
     //Display Menu
-    private static void displayMainMenu() 
+    private static void displayMainMenu(Patron patron) 
     {
     	clearScreen(); 
     	displayLMS(); 
@@ -78,7 +78,7 @@ public class LibraryManagementSystem
                 break;
             
             case 2:
-    			patronSection(scanner);
+    			patronSection(scanner,patron);
                 break;
             
             case 3:
@@ -206,7 +206,7 @@ public class LibraryManagementSystem
                 
             case 9:
             	System.out.println("Returning to Main Menu...");
-            	displayMainMenu();
+            	displayMainMenu(null);
                 break;
             default:
                 System.out.println("Invalid option. Try again.");
@@ -222,7 +222,7 @@ public class LibraryManagementSystem
 
     //Patron Functionalities Section
     @SuppressWarnings("unused")
-	private static void patronSection(Scanner scanner)
+	private static void patronSection(Scanner scanner, Patron patron)
     {
     	String value = " ";
     	clearScreen(); 
@@ -248,7 +248,6 @@ public class LibraryManagementSystem
               BookLinkedList bookLinked = new  BookLinkedList();
               BookManagement bookManagement1 = new BookManagement();
               PatronQueue patronQ = new PatronQueue(); 
-              Patron patron = new Patron();
               BookBST booktree = new BookBST();
               
               switch(choice) 
@@ -269,7 +268,7 @@ public class LibraryManagementSystem
              		 while(value.equals(" ")) {
              			value = scanner.next();
              		 }
-             		 patronSection(scanner); 
+             		 patronSection(scanner,patron); 
               		break;
               	
               	case 2:
@@ -280,7 +279,7 @@ public class LibraryManagementSystem
              		 while(value.equals(" ")) {
              			value = scanner.next();
              		 }
-             		 patronSection(scanner); 
+             		 patronSection(scanner,patron); 
               		break;
               	
               	case 3:
@@ -299,7 +298,7 @@ public class LibraryManagementSystem
               		  while(value.equals(" ")) {
               			value = scanner.next();
               		  }
-              		  patronSection(scanner); 
+              		  patronSection(scanner,patron); 
               		break;
               	
               	case 4:
@@ -312,7 +311,7 @@ public class LibraryManagementSystem
               		}else 
               		 {
               			System.out.println("Enter title of book you want to checkout: ");
-              			String tempTitle= scanner.next().trim(); 
+              			String tempTitle= scanner.nextLine().trim();
               			Book bookC = new Book();
               			bookC =  bookManagement1.searchByTitle(tempTitle);
               		 if(bookC == null) {
@@ -337,7 +336,7 @@ public class LibraryManagementSystem
               				opt = scanner.next().trim(); 
               				while(opt.equalsIgnoreCase("yes")) {
               					System.out.println("Enter title of book you want to checkout: ");
-                      			tempTitle= scanner.next().trim(); 
+                      			tempTitle= scanner.nextLine().trim();
                       			bookC =  bookManagement1.searchByTitle(tempTitle);
                       			if(bookC == null) {
                       				System.out.println("\nNo book of that title is available in the library");
@@ -376,7 +375,7 @@ public class LibraryManagementSystem
             		  while(value.equals(" ")) {
             			value = scanner.next();
             		  }
-            		  patronSection(scanner); 
+            		  patronSection(scanner,patron); 
               		break;
               
               	    case 5:
@@ -392,7 +391,7 @@ public class LibraryManagementSystem
           						while(value.equals(" ")) {
           							value = scanner.next();
           						}
-          						patronSection(scanner); 
+          						patronSection(scanner,patron); 
               					break;
               					
               				}else if(tempPatron.getBooksCheckedOut().CountNode()  > 1) {
@@ -407,7 +406,7 @@ public class LibraryManagementSystem
               						while(value.equals(" ")) {
               							value = scanner.next();
               						}
-              						patronSection(scanner); 
+              						patronSection(scanner,patron); 
                   					break;
                   				}else if (opt1.equalsIgnoreCase("no")) {
                   					System.out.println("\nThese are the books you have checkedout");
@@ -422,7 +421,7 @@ public class LibraryManagementSystem
                   						while(value.equals(" ")) {
                   							value = scanner.next();
                   						}
-                  						patronSection(scanner); 
+                  						patronSection(scanner,patron); 
                   						break;
                   					}else {
                   						System.out.println("\nYou have not checked out a book with this title!");
@@ -430,7 +429,7 @@ public class LibraryManagementSystem
 	                              		 while(value.equals(" ")) {
 	                              			value = scanner.next();
 	                              		  }
-	                              		  patronSection(scanner); 
+	                              		  patronSection(scanner,patron); 
                   						break;
                   					}
                   					
@@ -450,7 +449,7 @@ public class LibraryManagementSystem
               		break;
               	case 6:
               		System.out.println(" Exiting the Patron Menu. Goodbye!");
-              		displayMainMenu();
+              		displayMainMenu(patron);
                     return; 
               	default:
               		System.out.println("Invalid input selected");
@@ -458,7 +457,7 @@ public class LibraryManagementSystem
             		  while(value.equals(" ")) {
             			value = scanner.next();
             		  }
-            		  patronSection(scanner); 
+            		  patronSection(scanner,patron); 
               		return;    		
               }
     	 }while(choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6);
