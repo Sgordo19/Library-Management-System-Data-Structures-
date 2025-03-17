@@ -1,3 +1,4 @@
+
 /*
 Names: 
 Jade Freeman: 2300078
@@ -28,6 +29,8 @@ public class LibrarySystemGUI extends JFrame {
     private Dimension defaultPatronMgmtSize = new Dimension(500, 400);
     
 
+      
+    
     public LibrarySystemGUI() {
         login = new Logins_Registrationmethods();//Object Instantiations
         bookManagement = new BookManagement();
@@ -46,7 +49,7 @@ public class LibrarySystemGUI extends JFrame {
 
         currentPatron = Logins_Registrationmethods.patron;
         if (currentPatron != null) {
-            if ("admin".equalsIgnoreCase(currentPatron.getUsername())) {
+            if ("admin".equals(currentPatron.getUsername())) {
                 showAdminMenu();
             } else {
                 showPatronMenu();
@@ -147,7 +150,7 @@ public class LibrarySystemGUI extends JFrame {
 
             if (login.login(username, password)) {
                 Patron loggedInPatron = patronList.SearchForANode(username);//Check to see if patron was removed from system
-                if (loggedInPatron == null && !"admin".equalsIgnoreCase(username)) {
+                if (loggedInPatron == null && !"admin".equals(username)) {
                     JOptionPane.showMessageDialog(dialog, 
                         "Error: Your account has been removed from the system.", 
                         "Login Error", 
@@ -159,16 +162,18 @@ public class LibrarySystemGUI extends JFrame {
                         success[0] = true;
                         dialog.dispose();
                     }
-                } else {
+                } else { 
                     JOptionPane.showMessageDialog(dialog, "Login successful!");
                     // Offer optional password change after login
-                    int choice = JOptionPane.showConfirmDialog(dialog, 
-                        "Would you like to change your password?", 
-                        "Password Change", JOptionPane.YES_NO_OPTION);
-                    if (choice == JOptionPane.YES_OPTION) {
-                        if (changePasswordDialog(username, password)) {
-                            JOptionPane.showMessageDialog(dialog, "Password changed successfully!");
-                        }
+                    if(!username.equals("admin")) {
+                    	int choice = JOptionPane.showConfirmDialog(dialog, 
+                                "Would you like to change your password?", 
+                                "Password Change", JOptionPane.YES_NO_OPTION);
+                            if (choice == JOptionPane.YES_OPTION) {
+                                if (changePasswordDialog(username, password)) {
+                                    JOptionPane.showMessageDialog(dialog, "Password changed successfully!");
+                                }
+                            }
                     }
                     success[0] = true;
                     dialog.dispose();
@@ -186,7 +191,7 @@ public class LibrarySystemGUI extends JFrame {
             JOptionPane.showMessageDialog(dialog, result);
             if (result.startsWith("User registered successfully")) {
                 // Add the new patron to patronList after successful registration
-                Patron newPatron = new Patron(username, Logins_Registrationmethods.patron.getCardNumber());
+                Patron newPatron = new Patron(username);
                 patronList.InsertAtBack(newPatron); // Ensure patronList is updated
                 userField.setText("");
                 passField.setText("");
@@ -295,11 +300,9 @@ public class LibrarySystemGUI extends JFrame {
                 String title = JOptionPane.showInputDialog("Enter book title:");
                 String author = JOptionPane.showInputDialog("Enter author:");
                 String isbn = JOptionPane.showInputDialog("Enter ISBN:");
-                String availableStr = JOptionPane.showInputDialog("Is the book available? (true/false):");
-                if (title != null && author != null && isbn != null && availableStr != null) {
+                if (title != null && author != null && isbn != null) {
                     try {
-                        boolean available = Boolean.parseBoolean(availableStr.trim());
-                        bookManagement.addBook(title, author, isbn, available);
+                        bookManagement.addBook(title, author, isbn,true);
                         JOptionPane.showMessageDialog(this, "Book added successfully!");
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Invalid availability input! Use 'true' or 'false'.");
@@ -324,7 +327,7 @@ public class LibrarySystemGUI extends JFrame {
                 showPatronManagementMenu(dialog);
                 break;
             case 5: // View total patrons
-                JOptionPane.showMessageDialog(this, "Total patrons: " + Logins_Registrationmethods.patroncount);
+                JOptionPane.showMessageDialog(this, "Total patrons: " + patronList.CountNode());
                 dialog.dispose();
                 showAdminMenu();
                 break;
