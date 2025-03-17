@@ -53,7 +53,7 @@ public class Logins_Registrationmethods {
             return false;
         }
 
-        if (username.equalsIgnoreCase("admin")) {
+        if (username.equals("admin")) {
         	patron = new Patron("admin",0); 
             return true;
         }
@@ -74,7 +74,7 @@ public class Logins_Registrationmethods {
             return "Username cannot be empty!";
         }
 
-        if (username.equalsIgnoreCase("admin")) {
+        if (username.equals("admin")) {
             return "Admin registration is not allowed!";
         }
 
@@ -83,9 +83,6 @@ public class Logins_Registrationmethods {
         newUser.savePasswordToFile();
 
         patroncount++;
-        PatronLinkedList patron = new PatronLinkedList();
-        patron.InsertAtBack(new Patron(username));
-
         return "User registered successfully. Your default password is: " + generatedPassword;
     }
 
@@ -118,7 +115,7 @@ public class Logins_Registrationmethods {
         System.out.print("Enter a unique Username: ");
         String username = scanner.nextLine();
 
-        if (username.equalsIgnoreCase("admin")) {
+        if (username.equals("admin")) {
             System.out.println("Admin registration is not allowed!");
             return;
         }
@@ -142,7 +139,7 @@ public class Logins_Registrationmethods {
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
 
-        if (username.equalsIgnoreCase("admin")) {
+        if (username.equals("admin")) {
         	patron = new Patron("admin",0); 
         	return true;
         }
@@ -153,7 +150,7 @@ public class Logins_Registrationmethods {
 				Scanner scannerR  = new Scanner(file);
 				while(scannerR.hasNext()) {
 					temp = scannerR.next();
-					if(username.equalsIgnoreCase(username)) {
+					if(username.equals(username)) {
 						System.out.println("Patron has been removed from Library System.");
 						return false;
 					}
