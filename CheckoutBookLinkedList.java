@@ -185,7 +185,7 @@ public class CheckoutBookLinkedList implements Serializable {
     	BookNode curr = head; // point curr to the first element in the list
 
         while (curr != null) { // while the list is not empty.
-            System.out.println("Book Information is : " + curr.getData().toString());
+            System.out.println("Book Information is : " + curr.getData().toString2());
 
             curr = curr.getNextNode(); // point curr to the next node in the list
         }
@@ -269,7 +269,7 @@ public class CheckoutBookLinkedList implements Serializable {
         sb.append("No books checked out.");
     } else {
         while (curr != null) {
-            sb.append(curr.getData().toString()).append("\n");
+            sb.append(curr.getData().toString2()).append("\n");
             curr = curr.getNextNode();
         }
     }
