@@ -25,6 +25,7 @@ import java.util.Scanner;
 public class PatronLinkedList implements Serializable{
 	private static final long serialVersionUID = 1L;
     private PatronNode head;
+    
     // Default Constructor
     public PatronLinkedList() {
     	try {
@@ -114,7 +115,7 @@ public class PatronLinkedList implements Serializable{
             curr = curr.getNextNode(); // point curr to the next node in the list
         }
         System.out.println("End of list.");
-    } // End of DisplayList Method
+    } 
 
     public boolean IsEmpty() {
         if (head == null) {
@@ -152,6 +153,7 @@ public class PatronLinkedList implements Serializable{
   		
   	}
   	
+  	//display screen
   	public static void displayLMS() {
  	     
   	    System.out.println( "                                       --------------------------------------------------------  ");
@@ -213,22 +215,28 @@ public class PatronLinkedList implements Serializable{
     }
   
 
-    
-    
+    //VConsole Delete Node
     public Patron DeleteANode() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter patron card number to remove: ");
+        
+        String cardNumberStr = scanner.nextLine();
+        return DeleteANode(cardNumberStr);
+        
+    }
+    
+    //GUI delete a Node
+    public Patron DeleteANode(String cardNumberStr) {
         if (IsEmpty()) {
             System.err.println("Error: No patrons to delete.");
             return null;
         }
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter patron card number to remove: ");
-        
         int cardNumber;
         try {
-            cardNumber = scanner.nextInt();
-        } catch (Exception e) {
-            System.out.println("Invalid input. Please enter a valid number.");
+            cardNumber = Integer.parseInt(cardNumberStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid card number format.");
             return null;
         }
 
@@ -236,27 +244,22 @@ public class PatronLinkedList implements Serializable{
         while (curr != null) {
             if (curr.getData().getCardNumber() == cardNumber) {
                 if (curr == head) {
-                    head = head.getNextNode(); // Move head to next node
+                    head = head.getNextNode();
                 } else {
-                    prev.setNextNode(curr.getNextNode()); // Remove current node
+                    prev.setNextNode(curr.getNextNode());
                 }
-
                 Patron removedPatron = curr.getData();
                 curr = null;
-
-                // Save updated list to file
                 saveToFile();
-                System.out.println("Patron removed successfully: " + removedPatron);
                 return removedPatron;
             }
             prev = curr;
             curr = curr.getNextNode();
         }
-
-        System.out.println("Patron with card number " + cardNumber + " not found.");
         return null;
-    }
+      }
 
+    //Both Console and Gui
     	public Patron SearchForANode() {
     	    if (IsEmpty()) {
     	        System.err.println("Error: No patrons in the system.");
@@ -283,7 +286,7 @@ public class PatronLinkedList implements Serializable{
     	    return null;
     	}
     
-
+    //Both Console and GUI file
     private void saveToFile() {
         try {
             File file = new File("Patrons.txt");
@@ -295,7 +298,7 @@ public class PatronLinkedList implements Serializable{
         }
     }
 
-    
+    //BOth Console and GUI
     public void addPatron(Scanner scanner) {
         System.out.print("Enter patron name: ");
         String username = scanner.nextLine();
@@ -324,6 +327,16 @@ public class PatronLinkedList implements Serializable{
         return scanner.nextInt();
     }
   
+    // Console 
+    private Patron searchPatron(String patronId)
+    {
+        try {
+            int cardNumber = Integer.parseInt(patronId);
+            return searchPatronByCardNumber(cardNumber);
+        } catch (NumberFormatException e) {
+            return null; // Invalid ID format
+        }
+    }
  // GUI Support: Search for Patron by ID as String
     public String searchForPatronString(String patronId) {
         StringBuilder sb = new StringBuilder();
@@ -354,47 +367,4 @@ public class PatronLinkedList implements Serializable{
         return null;
     }
 
-    // Helper method for GUI search by String ID
-    private Patron searchPatron(String patronId)
-    {
-        try {
-            int cardNumber = Integer.parseInt(patronId);
-            return searchPatronByCardNumber(cardNumber);
-        } catch (NumberFormatException e) {
-            return null; // Invalid ID format
-        }
-    }
-
-	public Patron DeleteANode(String cardNumberStr) {
-    if (IsEmpty()) {
-        System.err.println("Error: No patrons to delete.");
-        return null;
-    }
-
-    int cardNumber;
-    try {
-        cardNumber = Integer.parseInt(cardNumberStr);
-    } catch (NumberFormatException e) {
-        System.out.println("Invalid card number format.");
-        return null;
-    }
-
-    PatronNode curr = head, prev = null;
-    while (curr != null) {
-        if (curr.getData().getCardNumber() == cardNumber) {
-            if (curr == head) {
-                head = head.getNextNode();
-            } else {
-                prev.setNextNode(curr.getNextNode());
-            }
-            Patron removedPatron = curr.getData();
-            curr = null;
-            saveToFile();
-            return removedPatron;
-        }
-        prev = curr;
-        curr = curr.getNextNode();
-    }
-    return null;
-}
 }
