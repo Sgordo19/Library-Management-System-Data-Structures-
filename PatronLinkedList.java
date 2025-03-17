@@ -145,29 +145,44 @@ public class PatronLinkedList implements Serializable{
     }
    
     public void createPatronMenu(PatronLinkedList patronList, Scanner scanner) {
-        while (true) {
+        String value = " ";
+        
+    	int choice;
+    	do {
             System.out.println("\nPatron Management Menu:");
             System.out.println("1. Add a new patron");
             System.out.println("2. Display all patrons");
             System.out.println("3. Return to Admin Menu");
             System.out.print("Choose an option: ");
 
-            int choice = getValidInput(scanner);
+            choice = getValidInput(scanner);
             scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    patronList.addPatron(scanner);
+                	Logins_Registrationmethods register = new Logins_Registrationmethods();
+                	register.registerUser(scanner);
+                	System.out.println("\nPress a key to go to menu....");
+            		while(value.equals(" ")) {
+            			value = scanner.next();
+            		}
+            		PatronLinkedList patronL = new PatronLinkedList(); 
+            		createPatronMenu(patronL, scanner);
                     break;
                 case 2:
                     patronList.DisplayList();
+                    System.out.println("\nPress a key to go to menu....");
+            		while(value.equals(" ")) {
+            			value = scanner.next();
+            		}
+            		createPatronMenu(patronList, scanner); 
                     break;
                 case 3:
                     return;
                 default:
                     System.out.println("Invalid option. Try again.");
             }
-        }
+        }while(choice != 1 && choice != 2 && choice != 3 );
     }
   
 
