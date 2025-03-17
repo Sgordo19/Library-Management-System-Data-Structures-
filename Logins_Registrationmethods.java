@@ -8,6 +8,10 @@ Jordon Taylor: 2304907
 */
 package librarySystemsProject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Logins_Registrationmethods {
     public static int patroncount = 0; // Keep track of registered users
     public static Patron patron; 
@@ -30,6 +34,7 @@ public class Logins_Registrationmethods {
                     registerUser(scanner);
                     break;
                 case 2:
+                	patron = null;
                     loggedIn = loginUser(scanner);
                     return patron;
                 case 3:
@@ -141,7 +146,24 @@ public class Logins_Registrationmethods {
         	patron = new Patron("admin",0); 
         	return true;
         }
-
+        File file = new File("RemovedPatrons.txt");
+        if(file.isFile()) {
+        	String temp; 
+        	try {
+				Scanner scannerR  = new Scanner(file);
+				while(scannerR.hasNext()) {
+					temp = scannerR.next();
+					if(username.equalsIgnoreCase(username)) {
+						System.out.println("Patron has been removed from Library System.");
+						return false;
+					}
+				}
+				scannerR.close();
+			} catch (FileNotFoundException e) {
+				System.err.println("Error, information could not be retrieved.");
+				e.printStackTrace();
+			}
+        }
         Password user = Password.getUserFromFile(username, password);
         if (user != null) {
             System.out.println("Login successful!");
