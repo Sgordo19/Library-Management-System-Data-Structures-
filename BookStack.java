@@ -91,4 +91,19 @@ public class BookStack {
 	public boolean isEmpty() {
 		return top==null; 
 	}
+
+	//GUI
+	public String displayStackString() {
+	    StringBuilder sb = new StringBuilder();
+	    if (isEmpty()) {
+	        sb.append("Stack is Empty");
+	    } else {
+	        BookStackElement temp = top;
+	        while (temp != null) {
+	            sb.append(temp.getBook().toString2()).append("\n");
+	            temp = temp.getPreviousElement();
+	        }
+	    }
+	    return sb.toString();
+	}
 }
