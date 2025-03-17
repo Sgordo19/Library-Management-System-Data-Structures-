@@ -364,4 +364,37 @@ public class PatronLinkedList implements Serializable{
             return null; // Invalid ID format
         }
     }
+
+	public Patron DeleteANode(String cardNumberStr) {
+    if (IsEmpty()) {
+        System.err.println("Error: No patrons to delete.");
+        return null;
+    }
+
+    int cardNumber;
+    try {
+        cardNumber = Integer.parseInt(cardNumberStr);
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid card number format.");
+        return null;
+    }
+
+    PatronNode curr = head, prev = null;
+    while (curr != null) {
+        if (curr.getData().getCardNumber() == cardNumber) {
+            if (curr == head) {
+                head = head.getNextNode();
+            } else {
+                prev.setNextNode(curr.getNextNode());
+            }
+            Patron removedPatron = curr.getData();
+            curr = null;
+            saveToFile();
+            return removedPatron;
+        }
+        prev = curr;
+        curr = curr.getNextNode();
+    }
+    return null;
+}
 }
