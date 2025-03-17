@@ -23,12 +23,25 @@ public class LibraryManagementSystem
 	
     public static void main(String[] args) 
     {
+    	
+        loginRegis(); //Simulates login/registration page
         
+    }
+    
+    
+    //Login/Register Function
+    public static void loginRegis() {
+    	clearScreen(); 
+    	Scanner scanner = new Scanner(System.in);
         Logins_Registrationmethods login = new Logins_Registrationmethods();
         displayLMS(); 
         Patron patron = login.Logins(null, null);
-        displayMainMenu(patron); 
         
+        if(patron != null && patron.getUsername().equalsIgnoreCase("admin")) {
+        	adminSection(scanner);
+        }else if(patron != null && !patron.getUsername().equalsIgnoreCase("admin")) {
+        	patronSection(scanner,patron);
+        }
     }
     
   //Clear screen function
@@ -56,6 +69,7 @@ public class LibraryManagementSystem
   	}
 
 
+  	/*
     //Display Menu
     private static void displayMainMenu(Patron patron) 
     {
@@ -97,7 +111,8 @@ public class LibraryManagementSystem
     	}while(choice != 1 && choice != 2 && choice != 3); 
         
     }
-
+*/
+  	
     //Admin Functionalities Section
     private static void adminSection(Scanner scanner) 
     {  
@@ -121,7 +136,7 @@ public class LibraryManagementSystem
             System.out.println("6. View Current Checkout");
             System.out.println("7. Search Patron");
             System.out.println("8. Remove Patron");
-            System.out.println("9. Return to Main Menu");
+            System.out.println("9. Return to Login Page");
             System.out.print("Choose an option: ");
             
             choice = scanner.nextInt();
@@ -205,8 +220,8 @@ public class LibraryManagementSystem
                 break;
                 
             case 9:
-            	System.out.println("Returning to Main Menu...");
-            	displayMainMenu(null);
+            	System.out.println("Returning to Login Page...");
+            	loginRegis(); 
                 break;
             default:
                 System.out.println("Invalid option. Try again.");
@@ -238,7 +253,7 @@ public class LibraryManagementSystem
               System.out.println("3. Search for Book by ISBN");
               System.out.println("4. Checkout Books");
               System.out.println("5. Return books");
-              System.out.println("6. Exit");
+              System.out.println("6. Return to Login Page");
               
               System.out.println("Choose an option: ");
               
@@ -448,8 +463,8 @@ public class LibraryManagementSystem
               		}
               		break;
               	case 6:
-              		System.out.println(" Exiting the Patron Menu. Goodbye!");
-              		displayMainMenu(patron);
+              		System.out.println("Returning to Login Page...");
+                	loginRegis(); 
                     return; 
               	default:
               		System.out.println("Invalid input selected");
