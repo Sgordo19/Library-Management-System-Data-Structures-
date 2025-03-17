@@ -37,9 +37,8 @@ public class BookManagement {
         String author = scanner.nextLine();
         System.out.print("\nEnter ISBN: ");
         String ISBN = scanner.nextLine();
-        System.out.print("\nIs the book available? (true/false): ");
-        boolean isAvailable = scanner.nextBoolean();
-        scanner.nextLine();
+        boolean isAvailable = true; 
+   
 
         addBook(title, author, ISBN, isAvailable);
         System.out.println("Book added successfully!");
