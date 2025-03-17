@@ -50,10 +50,14 @@ public class Logins_Registrationmethods {
         }
 
         if (username.equalsIgnoreCase("admin")) {
-            return handleAdminLogin(password);
+        	patron = new Patron("admin",0); 
+            return true;
         }
 
         Password user = Password.getUserFromFile(username, password);
+        PatronLinkedList patronLink = new PatronLinkedList(); 
+        patron = patronLink.SearchForANode(username);
+        
         if (user != null) {
             return true; // Login successful
         }
@@ -106,7 +110,7 @@ public class Logins_Registrationmethods {
     }
 
     // Private helper methods
-    private void registerUser(java.util.Scanner scanner) {
+    public void registerUser(java.util.Scanner scanner) {
         System.out.print("Enter a unique Username: ");
         String username = scanner.nextLine();
 
@@ -134,7 +138,8 @@ public class Logins_Registrationmethods {
         String password = scanner.nextLine();
 
         if (username.equalsIgnoreCase("admin")) {
-            return handleAdminLogin(password);
+        	patron = new Patron("admin",0); 
+        	return true;
         }
 
         Password user = Password.getUserFromFile(username, password);
@@ -185,9 +190,7 @@ public class Logins_Registrationmethods {
         }
     }
 
-    private boolean handleAdminLogin(String password) {
-        return password.equals("admin");
-    }
+    
 }
 
 
