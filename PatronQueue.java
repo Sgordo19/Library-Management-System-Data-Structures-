@@ -169,6 +169,8 @@ class PatronQueue implements Serializable {
             sb.append("----------------------------------------\n");
             while (temp != null) {
                 sb.append(temp.getPatron().toString()).append("\n");
+                sb.append("Books checkedout: \n");
+                sb.append(temp.getPatron().getBooksCheckedOut().displayListString()).append("\n"); 
                 temp = temp.getNext();
             }
             sb.append("----------------------------------------");
