@@ -31,9 +31,6 @@ public class BookStack {
 	
 	public Book pop() {//Removes book from checkout
 		
-		if(isEmpty()) {
-			System.out.println("Stack is Empty");
-		}
 		
 		Book value = top.getBook();//if stack isn't empty get latest book in checkout
 		top = top.getPreviousElement();
@@ -42,18 +39,13 @@ public class BookStack {
 	}
 	
 	public Book stackTop() {//Returns latest book in checkout waiting 
-		if(isEmpty()) {
-			System.out.println("Stack is Empty");
-		}
 		
 		return top.getBook(); 
 	}
 	
 	public int countStack() {//Count elements in stack
 		int count = 0;
-		if(isEmpty()) {
-			System.out.println("Stack is Empty");
-		}else {
+		if(!isEmpty()) {
 			BookStackElement temp = top;
 			while(temp != null) {
 				count++; 
@@ -66,9 +58,7 @@ public class BookStack {
 	
 	//Displays content of stack
 	public void displayStack() {
-		if(isEmpty()) {
-			System.out.println("Stack is Empty");
-		}else {
+		if(!isEmpty()) {
 			BookStackElement temp = top;
 			while(temp != null) {
 				System.out.println(temp.getBook().toString2());
@@ -95,9 +85,7 @@ public class BookStack {
 	//GUI
 	public String displayStackString() {
 	    StringBuilder sb = new StringBuilder();
-	    if (isEmpty()) {
-	        sb.append("Stack is Empty");
-	    } else {
+	    if (!isEmpty()){
 	        BookStackElement temp = top;
 	        while (temp != null) {
 	            sb.append(temp.getBook().toString2()).append("\n");
