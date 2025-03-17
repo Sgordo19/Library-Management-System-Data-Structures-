@@ -1,70 +1,55 @@
+/*
+Names: 
+Jade Freeman: 2300078
+Tonique Haywood: 2301114
+Anttwone Marsh: 2304211
+Jordon Taylor: 2304907
+Shavon Gordon: 2306989
+
+*/
 package librarySystemsProject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class LibrarySystemGUI extends JFrame {
-    private Logins_Registrationmethods login;
+    private Logins_Registrationmethods login; //Instance of Prior classes
     private BookManagement bookManagement;
     private PatronLinkedList patronList;
     private PatronQueue patronQ;
+    private BookStack bookStack;
+    private Patron currentPatron;
 
     public LibrarySystemGUI() {
-        login = new Logins_Registrationmethods();
+        login = new Logins_Registrationmethods();//Object Instantiations
         bookManagement = new BookManagement();
         patronList = new PatronLinkedList();
         patronQ = new PatronQueue();
+        bookStack = new BookStack();
 
-        setTitle("Library Management System");
+        setTitle("Library Management System"); //Title below logo display
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(1000, 600); 
         setLocationRelativeTo(null);
 
-        // Show login dialog before main GUI
         if (!showLoginRegistrationDialog()) {
-            System.exit(0); // Exit if login/registration fails or is canceled
+            System.exit(0);
         }
 
-        // Create main panel with LMS header
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JTextArea headerArea = new JTextArea(getLMSHeader());
-        headerArea.setEditable(false);
-        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        headerArea.setColumns(80); // Match totalWidth for proper display
-        mainPanel.add(headerArea, BorderLayout.NORTH);
-
-        // Create menu buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 10, 10));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        JButton adminButton = new JButton("Admin Section");
-        JButton patronButton = new JButton("Patron Section");
-        JButton exitButton = new JButton("Exit");
-
-        buttonPanel.add(adminButton);
-        buttonPanel.add(patronButton);
-        buttonPanel.add(exitButton);
-
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
-        add(mainPanel);
-
-        // Button actions
-        adminButton.addActionListener(_ -> showAdminMenu());
-        patronButton.addActionListener(_ -> showPatronMenu());
-        exitButton.addActionListener(_ -> {
-            if (JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", 
-                "Confirm Exit", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(0);
+        currentPatron = Logins_Registrationmethods.patron;
+        if (currentPatron != null) {
+            if ("admin".equalsIgnoreCase(currentPatron.getUsername())) {
+                showAdminMenu();
+            } else {
+                showPatronMenu();
             }
-        });
+        }
     }
-
+    //Display logo
     private String getLMSHeader() {
-        int totalWidth = 80; // Fixed width for centering
-
-        // Adjusted ASCII art with consistent spacing
+        int totalWidth = 80;
         String[] lines = {
             "--------------------------------------------------------",
             "***             ***** **      ** *****      *****",
@@ -77,96 +62,69 @@ public class LibrarySystemGUI extends JFrame {
             "--------------------------------------------------------",
             "----Library Management System----"
         };
-
         StringBuilder centeredHeader = new StringBuilder();
-
         for (String line : lines) {
             int lineLength = line.length();
             int padding = (totalWidth - lineLength) / 2;
-            if (padding < 0) padding = 0; // No negative padding
-
-            // Add left padding
+            if (padding < 0) padding = 0;
             for (int i = 0; i < padding; i++) {
                 centeredHeader.append(" ");
             }
-            centeredHeader.append(line);
-
-            // Ensure total width by adding right padding (optional for JTextArea)
-            int remaining = totalWidth - (lineLength + padding);
-            for (int i = 0; i < remaining; i++) {
-                centeredHeader.append(" ");
-            }
-            centeredHeader.append("\n");
+            centeredHeader.append(line).append("\n");
         }
-
-        centeredHeader.append("\n"); // Extra newline
+        centeredHeader.append("\n");
         return centeredHeader.toString();
     }
+
+    //Login/ Registration Window
     private boolean showLoginRegistrationDialog() {
         JDialog dialog = new JDialog(this, "Login / Register", true);
-        dialog.setSize(350, 250);
+        dialog.setSize(500, 400); // Enlarged from 350x250
         dialog.setLocationRelativeTo(null);
         dialog.setLayout(new BorderLayout());
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.setResizable(true);
 
-        // Panel for login components
-        JPanel contentPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel userLabel = new JLabel("Username:");
-        JTextField userField = new JTextField();
+        JTextArea headerArea = new JTextArea(getLMSHeader());
+        headerArea.setEditable(false);
+        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        headerArea.setBackground(contentPanel.getBackground());
+
+        JLabel userLabel = new JLabel("Username:");//Output Statement
+        JTextField userField = new JTextField(20);// Input Statement
         JLabel passLabel = new JLabel("Password:");
-        JPasswordField passField = new JPasswordField();
+        JPasswordField passField = new JPasswordField(20);
         JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
         JButton exitButton = new JButton("Exit");
+        //Layout of window
+        gbc.gridx = 0; gbc.gridy = 1; contentPanel.add(userLabel, gbc);
+        gbc.gridx = 1; gbc.gridy = 1; contentPanel.add(userField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; contentPanel.add(passLabel, gbc);
+        gbc.gridx = 1; gbc.gridy = 2; contentPanel.add(passField, gbc);
+        gbc.gridx = 0; gbc.gridy = 3; contentPanel.add(new JLabel(""), gbc);
+        gbc.gridx = 1; gbc.gridy = 3; contentPanel.add(loginButton, gbc);
+        gbc.gridx = 0; gbc.gridy = 4; contentPanel.add(new JLabel(""), gbc);
+        gbc.gridx = 1; gbc.gridy = 4; contentPanel.add(registerButton, gbc);
+        gbc.gridx = 0; gbc.gridy = 5; contentPanel.add(new JLabel(""), gbc);
+        gbc.gridx = 1; gbc.gridy = 5; contentPanel.add(exitButton, gbc);
 
-        contentPanel.add(userLabel);
-        contentPanel.add(userField);
-        contentPanel.add(passLabel);
-        contentPanel.add(passField);
-        contentPanel.add(new JLabel("")); // Spacer
-        contentPanel.add(loginButton);
-        contentPanel.add(new JLabel("")); // Spacer
-        contentPanel.add(registerButton);
-        contentPanel.add(new JLabel("")); // Spacer
-        contentPanel.add(exitButton);
-
-        // Add a maximize button at the top
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton maximizeButton = new JButton("Maximize");
-        topPanel.add(maximizeButton);
-
-        dialog.add(topPanel, BorderLayout.NORTH);
+        dialog.add(headerArea, BorderLayout.NORTH);
         dialog.add(contentPanel, BorderLayout.CENTER);
 
         final boolean[] success = {false};
-        final String[] currentUsername = {""};
-        final boolean[] isMaximized = {false}; // Track maximized state
-
-        maximizeButton.addActionListener(_ -> {
-            if (!isMaximized[0]) {
-                dialog.setSize(Toolkit.getDefaultToolkit().getScreenSize()); // Maximize to screen size
-                dialog.setLocation(0, 0); // Move to top-left corner
-                maximizeButton.setText("Restore");
-                isMaximized[0] = true;
-            } else {
-                dialog.setSize(350, 250); // Restore to original size
-                dialog.setLocationRelativeTo(null); // Center it again
-                maximizeButton.setText("Maximize");
-                isMaximized[0] = false;
-            }
-            dialog.revalidate(); // Ensure layout updates
-            dialog.repaint();    // Refresh the dialog
-        });
 
         loginButton.addActionListener(_ -> {
             String username = userField.getText().trim();
             String password = new String(passField.getPassword()).trim();
 
             if (login.login(username, password)) {
-                currentUsername[0] = username;
                 if (login.requiresFirstLoginChange(username, password)) {
                     if (changePasswordDialog(username, password)) {
                         success[0] = true;
@@ -195,31 +153,32 @@ public class LibrarySystemGUI extends JFrame {
         });
 
         exitButton.addActionListener(_ -> {
-            dialog.dispose();
+            System.exit(0);
         });
 
         dialog.setVisible(true);
         return success[0];
     }
 
+    //Change Password window
     private boolean changePasswordDialog(String username, String oldPassword) {
         JDialog changeDialog = new JDialog(this, "Change Password", true);
-        changeDialog.setSize(350, 200);
+        changeDialog.setSize(500, 300); // Enlarged from 350x200
         changeDialog.setLocationRelativeTo(null);
         changeDialog.setLayout(new GridLayout(3, 2, 10, 10));
-        changeDialog.setResizable(true); // Allow resizing for consistency
+        changeDialog.setResizable(true);
 
         JLabel newPassLabel = new JLabel("New Password:");
         JPasswordField newPassField = new JPasswordField();
         JButton changeButton = new JButton("Change");
         JButton cancelButton = new JButton("Cancel");
 
-        changeDialog.add(new JLabel("Password must be 8+ chars with capital, numbers, symbols"));
+        changeDialog.add(new JLabel("Password must be 8+ chars with at least (1) capital, numbers, symbols"));
         changeDialog.add(new JLabel(""));
-        changeDialog.add(newPassLabel);
-        changeDialog.add(newPassField);
-        changeDialog.add(changeButton);
-        changeDialog.add(cancelButton);
+        changeDialog.add(newPassLabel); //new password text label
+        changeDialog.add(newPassField); //section to add the new password
+        changeDialog.add(changeButton);//Change button
+        changeDialog.add(cancelButton);//cancel button
 
         final boolean[] changed = {false};
 
@@ -235,9 +194,7 @@ public class LibrarySystemGUI extends JFrame {
             }
         });
 
-        cancelButton.addActionListener(_ -> {
-            changeDialog.dispose();
-        });
+        cancelButton.addActionListener(_ -> changeDialog.dispose());
 
         changeDialog.setVisible(true);
         return changed[0];
@@ -245,175 +202,339 @@ public class LibrarySystemGUI extends JFrame {
 
     private void showAdminMenu() {
         JDialog adminDialog = new JDialog(this, "Admin Menu", true);
-        adminDialog.setSize(400, 500);
+        adminDialog.setSize(600, 700); // Enlarged from 400x500
         adminDialog.setLocationRelativeTo(this);
-        
-        JPanel panel = new JPanel(new GridLayout(10, 1, 5, 5));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel panel = new JPanel(new BorderLayout()); //Output appearance
+        JTextArea headerArea = new JTextArea(getLMSHeader());
+        headerArea.setEditable(false);
+        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        headerArea.setBackground(panel.getBackground());
+        panel.add(headerArea, BorderLayout.NORTH);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 5, 5));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         String[] options = {
             "Add a book", "Display all books", "View total books",
             "Patron Management", "View total patrons", "View current checkout",
-            "Search patron", "Remove patron", "Return to main menu"
+            "Search patron", "Remove patron", "Return to login page"
         };
 
         for (int i = 0; i < options.length; i++) {
-            JButton button = new JButton(options[i]);
+            JButton button = new JButton(options[i]); // Create a button with the text from options[i]
             final int choice = i + 1;
-            button.addActionListener(_ -> handleAdminAction(choice, adminDialog));
-            panel.add(button);
+            button.addActionListener(e -> handleAdminAction(choice, adminDialog));
+            buttonPanel.add(button);
         }
 
+        // GUI create and display dialog window
+        panel.add(buttonPanel, BorderLayout.CENTER);
         adminDialog.add(panel);
         adminDialog.setVisible(true);
     }
 
+    //Admin Actions Handler
     private void handleAdminAction(int choice, JDialog dialog) {
         switch (choice) {
-        case 1: // Add book
-            String title = JOptionPane.showInputDialog("Enter book title:");
-            String author = JOptionPane.showInputDialog("Enter author:");
-            String isbn = JOptionPane.showInputDialog("Enter ISBN:");
-            String availableStr = JOptionPane.showInputDialog("Is the book available? (true/false):");
-            if (title != null && author != null && isbn != null && availableStr != null) {
-                try {
-                    boolean available = Boolean.parseBoolean(availableStr.trim());
-                    bookManagement.addBook(title, author, isbn, available);
-                    JOptionPane.showMessageDialog(this, "Book added successfully!");
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Invalid availability input! Use 'true' or 'false'.");
+            case 1: // Add a book
+                String title = JOptionPane.showInputDialog("Enter book title:");
+                String author = JOptionPane.showInputDialog("Enter author:");
+                String isbn = JOptionPane.showInputDialog("Enter ISBN:");
+                String availableStr = JOptionPane.showInputDialog("Is the book available? (true/false):");
+                if (title != null && author != null && isbn != null && availableStr != null) {
+                    try {
+                        boolean available = Boolean.parseBoolean(availableStr.trim());
+                        bookManagement.addBook(title, author, isbn, available);
+                        JOptionPane.showMessageDialog(this, "Book added successfully!");
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "Invalid availability input! Use 'true' or 'false'.");
+                    }
                 }
-            }
-            break;
-            case 2: // Display books
+                dialog.dispose();
+                showAdminMenu();
+                break;
+            case 2: // Display all books
                 JTextArea textArea = new JTextArea(15, 40);
                 textArea.setText(bookManagement.displaySortedBooksString());
                 JOptionPane.showMessageDialog(this, new JScrollPane(textArea), "All Books", JOptionPane.PLAIN_MESSAGE);
+                dialog.dispose();
+                showAdminMenu();
                 break;
-            case 3: // Total books
+            case 3: // View total books
                 JOptionPane.showMessageDialog(this, "Total books: " + bookManagement.totalbooks());
+                dialog.dispose();
+                showAdminMenu();
                 break;
-            case 4: // Patron management
-                String patronName = JOptionPane.showInputDialog("Enter patron name:");
-                if (patronName != null && !patronName.trim().isEmpty()) {
-                    int cardNumber = patronList.generateUniqueCardNumber();
-                    Patron newPatron = new Patron(patronName, cardNumber);
-                    patronList.InsertAtBack(newPatron);
-                    JOptionPane.showMessageDialog(this, "Patron added: " + newPatron.toString());
-                }
+            case 4: // Patron Management
+                showPatronManagementMenu(dialog);
                 break;
-            case 5: // Total patrons
+            case 5: // View total patrons
                 JOptionPane.showMessageDialog(this, "Total patrons: " + Logins_Registrationmethods.patroncount);
+                dialog.dispose();
+                showAdminMenu();
                 break;
-            case 6: // Current checkout
+            case 6: // View current checkout
                 JTextArea checkoutArea = new JTextArea(15, 40);
                 checkoutArea.setText(patronQ.displayString());
                 JOptionPane.showMessageDialog(this, new JScrollPane(checkoutArea), "Current Checkout", JOptionPane.PLAIN_MESSAGE);
+                dialog.dispose();
+                showAdminMenu();
                 break;
             case 7: // Search patron
-                String searchId = JOptionPane.showInputDialog("Enter patron card number:");
-                if (searchId != null) {
-                    String result = patronList.searchForPatronString(searchId);
-                    JOptionPane.showMessageDialog(this, result);
+                String username = JOptionPane.showInputDialog("Enter patron username:");
+                if (username != null) {
+                    Patron found = patronList.SearchForANode(username);
+                    JOptionPane.showMessageDialog(this, found != null ? found.toString() : "Patron not found!");
                 }
+                dialog.dispose();
+                showAdminMenu();
                 break;
             case 8: // Remove patron
-                String removeId = JOptionPane.showInputDialog("Enter patron card number to remove:");
-                if (removeId != null) {
-                    patronList.DeleteANode();
-                    JOptionPane.showMessageDialog(this, "Patron removed if existed!");
-                }
-                break;
-            case 9: // Return to main
                 dialog.dispose();
+                String cardNumberStr = JOptionPane.showInputDialog(this, "Enter the card number of the patron to remove");
+                if (cardNumberStr != null && !cardNumberStr.trim().isEmpty())
+                	
+                  {
+                        Patron removed = patronList.DeleteANode(cardNumberStr); 
+                        JOptionPane.showMessageDialog(this, removed != null ? "Patron removed!" : "Patron not found!");
+                    } else if ( cardNumberStr != null) {
+                    	JOptionPane.showMessageDialog(this, "Card number cannot be empty!");
+                    }
+                
+                // Simulate "Press a key to go to menu..." with a simple OK dialog
+                JOptionPane.showMessageDialog(this, "Press any key to return to the menu.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                showAdminMenu(); // Return to admin menu
+                break;
+
+            case 9: // Return to login page
+                dialog.dispose();
+                new LibrarySystemGUI();
+                dispose();
                 break;
         }
     }
 
-    private void showPatronMenu() {
-        JDialog patronDialog = new JDialog(this, "Patron Menu", true);
-        patronDialog.setSize(400, 400);
-        patronDialog.setLocationRelativeTo(this);
-        
-        JPanel panel = new JPanel(new GridLayout(7, 1, 5, 5));
+    //Patron Management method in the admin Menu
+    private void showPatronManagementMenu(JDialog parentDialog) {
+        JDialog patronMgmtDialog = new JDialog(this, "Patron Management", true);
+        patronMgmtDialog.setSize(500, 400); // Enlarged from 400x250
+        patronMgmtDialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        String[] options = {
-            "Search by title", "Search by author", "Search by ISBN",
-            "Checkout books", "Return books", "Exit"
-        };
-
+        String[] options = {"Add a new patron", "Display all patrons", "Return to admin menu"};
         for (int i = 0; i < options.length; i++) {
             JButton button = new JButton(options[i]);
             final int choice = i + 1;
-            button.addActionListener(_ -> handlePatronAction(choice, patronDialog));
+            button.addActionListener(e -> handlePatronManagementAction(choice, patronMgmtDialog, parentDialog));
             panel.add(button);
         }
 
+        patronMgmtDialog.add(panel);
+        patronMgmtDialog.setVisible(true);
+    }
+
+    //Admin Management Method for adding and displaying patron from the admin menu
+    private void handlePatronManagementAction(int choice, JDialog dialog, JDialog parentDialog) {
+        switch (choice) {
+            case 1: // Add a new patron
+                String username = JOptionPane.showInputDialog("Enter a unique username:");
+                if (username != null && !username.trim().isEmpty()) {
+                    String result = login.register(username);
+                    JOptionPane.showMessageDialog(this, result);
+                }
+                dialog.dispose();
+                showPatronManagementMenu(parentDialog);
+                break;
+            case 2: // Display all patrons
+                JTextArea patronsArea = new JTextArea(15, 40);
+                StringBuilder sb = new StringBuilder();
+                PatronNode curr = patronList.getHead();
+                while (curr != null) {
+                    sb.append(curr.getData().toString()).append("\n");
+                    curr = curr.getNextNode();
+                }
+                patronsArea.setText(sb.length() > 0 ? sb.toString() : "No patrons in the system.");
+                JOptionPane.showMessageDialog(this, new JScrollPane(patronsArea), "All Patrons", JOptionPane.PLAIN_MESSAGE);
+                dialog.dispose();
+                showPatronManagementMenu(parentDialog);
+                break;
+            case 3: // Return to admin menu
+                dialog.dispose();
+                parentDialog.dispose();
+                showAdminMenu();
+                break;
+        }
+    }
+
+    //Patron Menu Method
+    private void showPatronMenu() {
+        JDialog patronDialog = new JDialog(this, "Patron Menu", true);//Create title for window
+        patronDialog.setSize(600, 500); 
+        patronDialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel(new BorderLayout()); 
+        JTextArea headerArea = new JTextArea(getLMSHeader());
+        headerArea.setEditable(false);
+        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        headerArea.setBackground(panel.getBackground());
+        panel.add(headerArea, BorderLayout.NORTH);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 5, 5));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        String[] options = {
+            "Search by title", "Search by author", "Search by ISBN",
+            "Checkout books", "Return books", "Return to login page"
+        };
+
+        //button creation based on the option
+        for (int i = 0; i < options.length; i++) {
+            JButton button = new JButton(options[i]); // Create a button with the text from options[i]
+            final int choice = i + 1;
+            button.addActionListener(e -> handlePatronAction(choice, patronDialog));
+            buttonPanel.add(button);
+        }
+
+        //create and display dialog window
+        panel.add(buttonPanel, BorderLayout.CENTER);
         patronDialog.add(panel);
         patronDialog.setVisible(true);
     }
 
+    //Method to navigate Patron menu
     private void handlePatronAction(int choice, JDialog dialog) {
-        BookManagement bookManagement1 = new BookManagement();
         switch (choice) {
             case 1: // Search by title
                 String title = JOptionPane.showInputDialog("Enter book title:");
                 if (title != null) {
-                    Book book = bookManagement1.searchByTitle(title);
-                    JOptionPane.showMessageDialog(this, book != null ? book.toString() : "Book not found!");
+                    Book book = bookManagement.searchByTitle(title);
+                    JOptionPane.showMessageDialog(this, book != null ? book.toString() : "No book with that title found!");
                 }
+                dialog.dispose();
+                showPatronMenu();
                 break;
             case 2: // Search by author
                 String author = JOptionPane.showInputDialog("Enter author:");
                 if (author != null) {
-                    String result = bookManagement1.searchByAuthorString(author);
-                    JOptionPane.showMessageDialog(this, result);
+                    JTextArea textArea = new JTextArea(15, 40);
+                    textArea.setText(bookManagement.searchByAuthorString(author));
+                    JOptionPane.showMessageDialog(this, new JScrollPane(textArea), "Books by Author", JOptionPane.PLAIN_MESSAGE);
                 }
+                dialog.dispose();
+                showPatronMenu();
                 break;
             case 3: // Search by ISBN
                 String isbn = JOptionPane.showInputDialog("Enter ISBN:");
                 if (isbn != null) {
-                    Book book1 = bookManagement1.searchByISBN(isbn);
-                    JOptionPane.showMessageDialog(this, book1 != null ? book1.toString() : "Book not found!");
+                    Book book = bookManagement.searchByISBN(isbn);
+                    JOptionPane.showMessageDialog(this, book != null ? book.toString() : "No book with that ISBN found!");
                 }
-                break;
-            case 4: // Checkout books - Simplified
-                String checkoutTitle = JOptionPane.showInputDialog("Enter book title to checkout:");
-                if (checkoutTitle != null) {
-                    Book bookC = bookManagement1.searchByTitle(checkoutTitle);
-                    if (bookC != null && bookC.isAvailable()) {
-                        bookC.setIsAvailable(false);
-                        Patron currentPatron = new Patron("CurrentUser", patronList.generateUniqueCardNumber());
-                        patronQ.enqueue(currentPatron);
-                        JOptionPane.showMessageDialog(this, "Book checked out successfully!");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Book not available!");
-                    }
-                }
-                break;
-            case 5: // Return books - Simplified
-                String returnTitle = JOptionPane.showInputDialog("Enter book title to return:");
-                if (returnTitle != null) {
-                    Book bookR = bookManagement1.searchByTitle(returnTitle);
-                    if (bookR != null && !bookR.isAvailable()) {
-                        bookR.setIsAvailable(true);
-                        patronQ.dequeue();
-                        JOptionPane.showMessageDialog(this, "Book returned successfully!");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Book not checked out or not found!");
-                    }
-                }
-                break;
-            case 6: // Exit
                 dialog.dispose();
+                showPatronMenu();
+                break;
+            case 4: // Checkout books
+                if (patronQ.search(currentPatron.getCardNumber())) {
+                    JOptionPane.showMessageDialog(this, "You have books to return; cannot checkout more!");
+                } else {
+                    checkoutBooks();
+                }
+                dialog.dispose();
+                showPatronMenu();
+                break;
+            case 5: // Return books
+                returnBooks();
+                dialog.dispose();
+                showPatronMenu();
+                break;
+            case 6: // Return to login page
+                dialog.dispose();
+                new LibrarySystemGUI();
+                dispose();
                 break;
         }
     }
 
+    //GUI checkoutBooks Methods
+    private void checkoutBooks() {
+        BookStack tempStack = new BookStack();
+        while (true) {
+            String title = JOptionPane.showInputDialog("Enter title of book to checkout (or Cancel to finish):");
+            if (title == null) break;
+            Book book = bookManagement.searchByTitle(title);
+            if (book == null) {
+                JOptionPane.showMessageDialog(this, "No book with that title found!");
+            } else if (!book.isAvailable()) {
+                JOptionPane.showMessageDialog(this, "Book is currently checked out!");
+            } else {
+                tempStack.push(book);
+            }
+
+            if (tempStack.countStack() > 0) {
+                int undo = JOptionPane.showConfirmDialog(this, "Undo this checkout?", "Confirm", JOptionPane.YES_NO_OPTION);
+                if (undo == JOptionPane.YES_OPTION) {
+                    tempStack.pop();
+                }
+            }
+
+            int more = JOptionPane.showConfirmDialog(this, "Checkout another book?", "Continue", JOptionPane.YES_NO_OPTION);
+            if (more != JOptionPane.YES_OPTION) break;
+        }
+
+        if (tempStack.countStack() > 0) {
+            tempStack.changeAvailabilty();
+            currentPatron.getBooksCheckedOut().insertStack(tempStack);
+            patronQ.enqueue(currentPatron);
+            JTextArea checkoutArea = new JTextArea(15, 40);
+            checkoutArea.setText(tempStack.displayStackString());
+            JOptionPane.showMessageDialog(this, new JScrollPane(checkoutArea), "Books Checked Out", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    //GUI return Books Methods
+    private void returnBooks() {
+        if (!patronQ.search(currentPatron.getCardNumber())) {
+            JOptionPane.showMessageDialog(this, "You don't have any books to return!");
+            return;
+        }
+
+        Patron queueHead = patronQ.peek();
+        if (queueHead.getCardNumber() != currentPatron.getCardNumber()) {
+            JOptionPane.showMessageDialog(this, "Cannot return books until patron with card number " + 
+                queueHead.getCardNumber() + " returns all books!");
+            return;
+        }
+
+        int count = currentPatron.getBooksCheckedOut().CountNode();
+        if (count == 1) {
+            currentPatron.getBooksCheckedOut().changeAllAvailability();
+            patronQ.dequeue();
+            JOptionPane.showMessageDialog(this, "Book returned successfully!");
+        } else if (count > 1) {
+            int returnAll = JOptionPane.showConfirmDialog(this, "Return all books?", "Confirm", JOptionPane.YES_NO_OPTION);
+            if (returnAll == JOptionPane.YES_OPTION) {
+                currentPatron.getBooksCheckedOut().changeAllAvailability();
+                patronQ.dequeue();
+                JOptionPane.showMessageDialog(this, "Books returned successfully!");
+            } else {
+                JTextArea booksArea = new JTextArea(15, 40);
+                booksArea.setText(currentPatron.getBooksCheckedOut().displayListString());
+                JOptionPane.showMessageDialog(this, new JScrollPane(booksArea), "Your Checked Out Books", JOptionPane.PLAIN_MESSAGE);
+                String returnTitle = JOptionPane.showInputDialog("Enter title of book to return:");
+                if (returnTitle != null && currentPatron.getBooksCheckedOut().SearchForANode(returnTitle)) {
+                    currentPatron.getBooksCheckedOut().DeleteANode1(returnTitle);
+                    patronQ.addFront(currentPatron);
+                    JOptionPane.showMessageDialog(this, "Book returned successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "You have not checked out a book with this title!");
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new LibrarySystemGUI().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LibrarySystemGUI());
     }
 }
