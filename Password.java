@@ -75,7 +75,7 @@ public class Password
     // Save user and password to file
     public void savePasswordToFile() 
     {
-        if (username.equalsIgnoreCase("admin")) {
+        if (username.equals("admin")) {
             System.out.println("Admin registration is not allowed!");
             return;
         }
@@ -105,7 +105,7 @@ public class Password
                 boolean isPasswordChanged = Boolean.parseBoolean(parts[2]);
                 boolean isFirstLogin = Boolean.parseBoolean(parts[3]);
                 
-                if (storedUsername.equalsIgnoreCase(username) && storedHashedPassword.equals(hashPassword(enteredPassword))) {
+                if (storedUsername.equals(username) && storedHashedPassword.equals(hashPassword(enteredPassword))) {
                     Password user = new Password(username, enteredPassword);
                     user.isPasswordChanged = isPasswordChanged;
                     user.isFirstLogin = isFirstLogin;
