@@ -144,7 +144,34 @@ public class PatronLinkedList implements Serializable{
         return null; // Return null if no match is found
     }
    
+  //Clear screen function
+  	public static void clearScreen() {
+  		for(double i = 1; i <= 50; i = i + .01) {
+  			System.out.println();
+  		}
+  		
+  	}
+  	
+  	public static void displayLMS() {
+ 	     
+  	    System.out.println( "                                       --------------------------------------------------------  ");
+  	    System.out.println( "                                       ***               ***** **      ** *****      *****                 ");
+  	    System.out.println( "                                       ***               *****   **   **  *****     **       ");
+  	    System.out.println( "                                       ***               *****    ** **   *****       ***       ");
+  	    System.out.println( "                                       ***               *****            *****         *** ");
+  	    System.out.println( "                                       ***               *****            *****           **");
+  	    System.out.println( "                                       *************     *****            *****          **");
+  	    System.out.println( "                                       *************     *****            *****     ****");
+  	    System.out.println( "                                       -------------------------------------------------------- ");
+  	    System.out.println( "                                                    ----Library Management System---- ");
+  	    System.out.println();
+  	         
+  	}
+
     public void createPatronMenu(PatronLinkedList patronList, Scanner scanner) {
+    	clearScreen();
+    	displayLMS();
+    	
         String value = " ";
         
     	int choice;
