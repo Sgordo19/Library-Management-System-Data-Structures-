@@ -13,6 +13,7 @@ package librarySystemsProject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -239,7 +240,7 @@ public class PatronLinkedList implements Serializable{
             System.out.println("Invalid card number format.");
             return null;
         }
-
+        
         PatronNode curr = head, prev = null;
         while (curr != null) {
             if (curr.getData().getCardNumber() == cardNumber) {
@@ -248,16 +249,43 @@ public class PatronLinkedList implements Serializable{
                 } else {
                     prev.setNextNode(curr.getNextNode());
                 }
+                System.out.println("\nPatron removed from library system.");
                 Patron removedPatron = curr.getData();
                 curr = null;
                 saveToFile();
+                StoreRemovedPatron(removedPatron.getUsername());
                 return removedPatron;
             }
             prev = curr;
             curr = curr.getNextNode();
         }
+        System.out.println("\nNo patron with this card number was found.");
         return null;
       }
+    
+    
+    public void StoreRemovedPatron(String username) {
+    	File file = new File("RemovedPatrons.txt");
+    	if(file.isFile()) {
+    		try {
+    			FileWriter inp = new FileWriter(file,true);
+    			inp.write(username + " ");
+    			inp.close(); 
+    		} catch (IOException e) {
+    			System.err.println("Error,  information could not be stored.");
+    			e.printStackTrace();
+    		}
+    	}else {
+    		try {
+    			FileWriter inp = new FileWriter(file);
+    			inp.write(username + " ");
+    			inp.close(); 
+    		} catch (IOException e) {
+    			System.err.println("Error,  information could not be stored.");
+    			e.printStackTrace();
+    		}
+    	}
+    }
 
     //Both Console and Gui
     	public Patron SearchForANode() {
