@@ -11,13 +11,13 @@ Jordon Taylor: 2304907
 
 public class Logins_Registrationmethods {
     public static int patroncount = 0; // Keep track of registered users
-
+    public static Patron patron; 
     public Logins_Registrationmethods() {
         // Constructor can remain empty or initialize something if needed
     }
 
     // Main login method for console (kept for compatibility)
-    public boolean Logins(String username, String password) {
+    public Patron Logins(String username, String password) {
         java.util.Scanner scanner = new java.util.Scanner(System.in);
         boolean loggedIn = false;
         while (!loggedIn) {
@@ -32,15 +32,15 @@ public class Logins_Registrationmethods {
                     break;
                 case 2:
                     loggedIn = loginUser(scanner);
-                    break;
+                    return patron;
                 case 3:
                     System.out.println("Exiting...");
-                    return false;
+                    return null;
                 default:
                     System.out.println("Invalid option. Try again.");
             }
         }
-        return loggedIn;
+        return null;
     }
 
     // GUI-friendly login method
@@ -145,6 +145,8 @@ public class Logins_Registrationmethods {
             } else {
                 offerPasswordChange(user, scanner);
             }
+            PatronLinkedList patronLink = new PatronLinkedList(); 
+            patron = patronLink.SearchForANode(username);
             return true;
         } else {
             System.out.println("Incorrect username or password.");
