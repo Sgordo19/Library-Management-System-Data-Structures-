@@ -362,7 +362,7 @@ Shavon Gordon: 2306989
 	              				if(tempPatron.getBooksCheckedOut().CountNode()  == 1) {
 	              					tempPatron.getBooksCheckedOut().changeAllAvailability();
 	              					patronQ.dequeue();
-	              					System.out.println("\nBook returned sucessfully"); 
+	              					System.out.println("\nBook with title ' "+tempPatron.getBooksCheckedOut().getHead().getData().getTitle()+" ' returned successfully!"); 
 	              					System.out.println("\nPress a key to go to menu....");
 	          						while(value.equals(" ")) {
 	          							value = scanner.next();
@@ -392,7 +392,7 @@ Shavon Gordon: 2306989
 	                  					if(tempPatron.getBooksCheckedOut().SearchForANode(opt1)) {
 	                  						tempPatron.getBooksCheckedOut().DeleteANode1(opt1);
 	                  						patronQ.addFront(tempPatron); 
-	                  						System.out.println("\nBook returned sucessfully"); 
+	                  						System.out.println("\nBook with title ' "+opt1+" ' returned successfully!"); 
 	                  						System.out.println("\nPress a key to go to menu....");
 	                  						while(value.equals(" ")) {
 	                  							value = scanner.next();
@@ -415,6 +415,10 @@ Shavon Gordon: 2306989
 	              			else 
 	              			{ 
 	              				System.out.println("\n\nPatron can't return book(s) until Patron with cardnumber - "+tempPatron.getCardNumber()+" return all books");
+	              				while(value.equals(" ")) {
+                          			value = scanner.next();
+                          		  }
+                          		  patronSection(scanner,patron); 
 	              			}
 	              		}
 	              		else 
