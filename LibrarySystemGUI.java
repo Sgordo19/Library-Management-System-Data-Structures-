@@ -1,4 +1,3 @@
-
 /*
 Names: 
 Jade Freeman: 2300078
@@ -56,6 +55,25 @@ public class LibrarySystemGUI extends JFrame {
             }
         }
     }
+    
+    private JPanel createHeaderPanel() {
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(Color.WHITE);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Adds padding
+
+        // Load Image (Library Logo)
+        ImageIcon icon = new ImageIcon(getClass().getResource("Logo.png"));
+        JLabel label = new JLabel(icon);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setIcon(new ImageIcon(icon.getImage().getScaledInstance(350, 127, Image.SCALE_SMOOTH)));
+
+        // Add only the logo to the panel
+        headerPanel.add(label);
+
+        return headerPanel; // Return the header panel
+    }
+    
     //Screen methods
     private void toggleFullScreen(JDialog dialog, JButton toggleButton, Dimension defaultSize) {
         if (dialog.getSize().equals(Toolkit.getDefaultToolkit().getScreenSize())) {
@@ -70,28 +88,7 @@ public class LibrarySystemGUI extends JFrame {
         dialog.revalidate();
         dialog.repaint();
     }
-    
-    //Display logo
-    private String getLMSHeader(int totalWidth) {
-        String[] lines = {
-            "       Library Management System"
-        };
-        StringBuilder centeredHeader = new StringBuilder();
-        for (String line : lines) {
-            int lineLength = line.length();
-            int padding = (totalWidth - lineLength) / 2;
-            if (padding < 0) padding = 0;
-            for (int i = 0; i < padding; i++) {
-                centeredHeader.append(" ");
-            }
-            centeredHeader.append(line).append("\n");
-        }
-        centeredHeader.append("\n");
-        return centeredHeader.toString();
-    }
-    
-   
-    
+      
 
     //Login/ Registration Window
     private boolean showLoginRegistrationDialog() {
@@ -102,6 +99,9 @@ public class LibrarySystemGUI extends JFrame {
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         dialog.setResizable(true);
 
+        // Add the header panel with only the logo
+        dialog.add(createHeaderPanel(), BorderLayout.NORTH);
+
         JPanel contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -109,14 +109,6 @@ public class LibrarySystemGUI extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextArea headerArea = new JTextArea(getLMSHeader(38));
-        headerArea.setEditable(false);
-        headerArea.setFont(new Font("Impact", Font.PLAIN, 32));
-        headerArea.setBackground(contentPanel.getBackground());
-
-        
-        
-    	
         JLabel userLabel = new JLabel("Username:");
         JTextField userField = new JTextField(20);
         JLabel passLabel = new JLabel("Password:");
@@ -125,7 +117,6 @@ public class LibrarySystemGUI extends JFrame {
         JButton registerButton = new JButton("Register");
         JButton exitButton = new JButton("Exit");
 
-        
         gbc.gridx = 0; gbc.gridy = 1; contentPanel.add(userLabel, gbc);
         gbc.gridx = 1; gbc.gridy = 1; contentPanel.add(userField, gbc);
         gbc.gridx = 0; gbc.gridy = 2; contentPanel.add(passLabel, gbc);
@@ -137,8 +128,7 @@ public class LibrarySystemGUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 5; contentPanel.add(new JLabel(""), gbc);
         gbc.gridx = 1; gbc.gridy = 5; contentPanel.add(exitButton, gbc);
 
-        dialog.add(headerArea, BorderLayout.CENTER);
-        dialog.add(contentPanel, BorderLayout.SOUTH);
+        dialog.add(contentPanel, BorderLayout.CENTER); // Adjusted to CENTER for better layout
 
         final boolean[] success = {false};
 
@@ -147,7 +137,7 @@ public class LibrarySystemGUI extends JFrame {
             String password = new String(passField.getPassword()).trim();
 
             if (login.login(username, password)) {
-                Patron loggedInPatron = patronList.SearchForANode(username);//Check to see if patron was removed from system
+                Patron loggedInPatron = patronList.SearchForANode(username);
                 if (loggedInPatron == null && !"admin".equals(username)) {
                     JOptionPane.showMessageDialog(dialog, 
                         "Error: Your account has been removed from the system.", 
@@ -162,27 +152,26 @@ public class LibrarySystemGUI extends JFrame {
                     }
                 } else { 
                     JOptionPane.showMessageDialog(dialog, "Login successful!");
-                    // Offer optional password change after login
-                    if(!username.equals("admin")) {
-                    	int choice = JOptionPane.showConfirmDialog(dialog, 
-                                "Would you like to change your password?", 
-                                "Password Change", JOptionPane.YES_NO_OPTION);
-                            if (choice == JOptionPane.YES_OPTION) {
-                                if (changePasswordDialog(username, password)) {
-                                    JOptionPane.showMessageDialog(dialog, "Password changed successfully!");
-                                }
+                    if (!username.equals("admin")) {
+                        int choice = JOptionPane.showConfirmDialog(dialog, 
+                            "Would you like to change your password?", 
+                            "Password Change", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.YES_OPTION) {
+                            if (changePasswordDialog(username, password)) {
+                                JOptionPane.showMessageDialog(dialog, "Password changed successfully!");
                             }
+                        }
                     }
                     success[0] = true;
                     dialog.dispose();
                 }
-            } else if(username.equals("") && password.equals("")) {
-            	JOptionPane.showMessageDialog(dialog, "Enter username and password to login.");
-             }else if(!username.equals("") && password.equals("")) {
-            	 JOptionPane.showMessageDialog(dialog, "Enter password to login.");
-             }else if(username.equals("") && !password.equals("")) {
-            	 JOptionPane.showMessageDialog(dialog, "Enter username to login.");
-             }else {
+            } else if (username.equals("") && password.equals("")) {
+                JOptionPane.showMessageDialog(dialog, "Enter username and password to login.");
+            } else if (!username.equals("") && password.equals("")) {
+                JOptionPane.showMessageDialog(dialog, "Enter password to login.");
+            } else if (username.equals("") && !password.equals("")) {
+                JOptionPane.showMessageDialog(dialog, "Enter username to login.");
+            } else {
                 JOptionPane.showMessageDialog(dialog, "Incorrect username or password.");
                 userField.setText("");
                 passField.setText("");
@@ -193,11 +182,10 @@ public class LibrarySystemGUI extends JFrame {
             String username = userField.getText().trim();
             String result = login.register(username);
             JOptionPane.showMessageDialog(dialog, result);
-            System.out.println(result);//Easier to use back default password
+            System.out.println(result);
             if (result.startsWith("User registered successfully")) {
-                // Add the new patron to patronList after successful registration
                 Patron newPatron = new Patron(username);
-                patronList.InsertAtBack(newPatron); // Ensure patronList is updated
+                patronList.InsertAtBack(newPatron);
                 userField.setText("");
                 passField.setText("");
             }
@@ -251,37 +239,27 @@ public class LibrarySystemGUI extends JFrame {
 
     private void showAdminMenu() {
         JDialog adminDialog = new JDialog(this, "Admin Menu", true);
-        adminDialog.setSize(defaultAdminSize); // Use default size (600x700)
+        adminDialog.setSize(defaultAdminSize);
         adminDialog.setLocationRelativeTo(this);
 
-        
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
-        JTextArea headerArea = new JTextArea(getLMSHeader(38));
-        headerArea.setEditable(false);
-        headerArea.setFont(new Font("Impact", Font.PLAIN, 32));
-        headerArea.setBackground(panel.getBackground());
-        headerArea.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the text area horizontally
-        headerArea.setLineWrap(false); // Prevent wrapping to maintain fixed width
 
-        // Wrap headerArea in a panel to control its alignment
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        headerPanel.setBackground(Color.WHITE);
-        headerPanel.add(headerArea);
-        panel.add(headerPanel, BorderLayout.CENTER); // Place header in CENTER for vertical flexibility
+        // Add the header panel with only the logo
+        panel.add(createHeaderPanel(), BorderLayout.NORTH);
 
         // Button panel
-        JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 9, 9));//increase gap
+        JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 9, 9));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topPanel.setBackground(Color.WHITE);
         JButton fullScreenButton = new JButton("Full Screen");
-        fullScreenButton.setFont(new Font("SansSerif", Font.PLAIN, 16)); //make button size bigger
+        fullScreenButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
         topPanel.add(fullScreenButton);
 
-        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(topPanel, BorderLayout.EAST); // Fullscreen button in EAST
         panel.add(buttonPanel, BorderLayout.SOUTH); // Buttons at the bottom
 
         String[] options = {
@@ -407,13 +385,14 @@ public class LibrarySystemGUI extends JFrame {
             case 1: // Add a new patron
                 String username = JOptionPane.showInputDialog("Enter a unique username:");
                 if (username != null && !username.trim().isEmpty()) {
-                    String result = login.register(username);
+                    String result = login.adminRegister(username); 
                     JOptionPane.showMessageDialog(this, result);
                 }
                 dialog.dispose();
                 showPatronManagementMenu(parentDialog);
                 break;
             case 2: // Display all patrons
+            	patronList = new PatronLinkedList();
                 JTextArea patronsArea = new JTextArea(15, 40);
                 StringBuilder sb = new StringBuilder();
                 PatronNode curr = patronList.getHead();
@@ -436,40 +415,28 @@ public class LibrarySystemGUI extends JFrame {
 
     //Patron Menu Method
     private void showPatronMenu() {
-        JDialog patronDialog = new JDialog(this, "Patron Menu", true);//Create title for window
-        patronDialog.setSize(defaultPatronSize); 
+        JDialog patronDialog = new JDialog(this, "Patron Menu", true);
+        patronDialog.setSize(defaultPatronSize);
         patronDialog.setLocationRelativeTo(this);
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
-        
-        JTextArea headerArea = new JTextArea(getLMSHeader(310));
-        headerArea.setEditable(false);
-        headerArea.setFont(new Font("Impact", Font.PLAIN, 32));//LMS HEADER SIZE
-        headerArea.setBackground(panel.getBackground());
-        headerArea.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the text area horizontally
-        headerArea.setLineWrap(false); // Prevent wrapping to maintain fixed width
-        headerArea.setRows(12); // Ensure all lines are visible
-        headerArea.setColumns(80);
-        
-        // Wrap headerArea in a panel to control its alignment
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        headerPanel.setBackground(Color.WHITE);
-        headerPanel.add(headerArea);
-        panel.add(headerPanel, BorderLayout.CENTER); // Place header in CENTER for vertical flexibility
+
+        // Add the header panel with only the logo
+        panel.add(createHeaderPanel(), BorderLayout.NORTH);
 
         // Button panel
-        JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 9, 9));//increase gap
+        JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 9, 9));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topPanel.setBackground(Color.WHITE);
         JButton fullScreenButton = new JButton("Full Screen");
-        fullScreenButton.setFont(new Font("SansSerif", Font.PLAIN, 16)); //make button size bigger
+        fullScreenButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
         topPanel.add(fullScreenButton);
 
-        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(topPanel, BorderLayout.EAST); // Fullscreen button in EAST
         panel.add(buttonPanel, BorderLayout.SOUTH); // Buttons at the bottom
 
         String[] options = {
@@ -477,17 +444,15 @@ public class LibrarySystemGUI extends JFrame {
             "Checkout books", "Return books", "Return to login page"
         };
 
-        //button creation based on the option
         for (int i = 0; i < options.length; i++) {
-            JButton button = new JButton(options[i]); // Create a button with the text from options[i]
+            JButton button = new JButton(options[i]);
             final int choice = i + 1;
             button.addActionListener(e -> handlePatronAction(choice, patronDialog));
             buttonPanel.add(button);
         }
 
         fullScreenButton.addActionListener(e -> toggleFullScreen(patronDialog, fullScreenButton, defaultPatronSize));
-        
-        //create and display dialog window
+
         patronDialog.add(panel);
         patronDialog.setVisible(true);
     }
