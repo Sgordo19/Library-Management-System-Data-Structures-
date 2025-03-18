@@ -99,6 +99,9 @@ public class LibrarySystemGUI extends JFrame {
         centeredHeader.append("\n");
         return centeredHeader.toString();
     }
+    
+   
+    
 
     //Login/ Registration Window
     private boolean showLoginRegistrationDialog() {
@@ -110,6 +113,7 @@ public class LibrarySystemGUI extends JFrame {
         dialog.setResizable(true);
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
+        contentPanel.setBackground(Color.WHITE);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -120,6 +124,9 @@ public class LibrarySystemGUI extends JFrame {
         headerArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         headerArea.setBackground(contentPanel.getBackground());
 
+        
+        
+    	
         JLabel userLabel = new JLabel("Username:");
         JTextField userField = new JTextField(20);
         JLabel passLabel = new JLabel("Password:");
@@ -128,6 +135,7 @@ public class LibrarySystemGUI extends JFrame {
         JButton registerButton = new JButton("Register");
         JButton exitButton = new JButton("Exit");
 
+        
         gbc.gridx = 0; gbc.gridy = 1; contentPanel.add(userLabel, gbc);
         gbc.gridx = 1; gbc.gridy = 1; contentPanel.add(userField, gbc);
         gbc.gridx = 0; gbc.gridy = 2; contentPanel.add(passLabel, gbc);
@@ -249,7 +257,9 @@ public class LibrarySystemGUI extends JFrame {
         adminDialog.setSize(defaultAdminSize); // Use default size (600x700)
         adminDialog.setLocationRelativeTo(this);
 
+        
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.WHITE);
         JTextArea headerArea = new JTextArea(getLMSHeader());
         headerArea.setEditable(false);
         headerArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
@@ -259,14 +269,17 @@ public class LibrarySystemGUI extends JFrame {
 
         // Wrap headerArea in a panel to control its alignment
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        headerPanel.setBackground(Color.WHITE);
         headerPanel.add(headerArea);
         panel.add(headerPanel, BorderLayout.CENTER); // Place header in CENTER for vertical flexibility
 
         // Button panel
         JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 9, 9));//increase gap
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topPanel.setBackground(Color.WHITE);
         JButton fullScreenButton = new JButton("Full Screen");
         fullScreenButton.setFont(new Font("SansSerif", Font.PLAIN, 16)); //make button size bigger
         topPanel.add(fullScreenButton);
@@ -379,6 +392,7 @@ public class LibrarySystemGUI extends JFrame {
         patronMgmtDialog.setLocationRelativeTo(this);
 
         JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         String[] options = {"Add a new patron", "Display all patrons", "Return to admin menu"};
@@ -433,6 +447,7 @@ public class LibrarySystemGUI extends JFrame {
         patronDialog.setLocationRelativeTo(this);
 
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.WHITE);
         
         JTextArea headerArea = new JTextArea(getLMSHeader());
         headerArea.setEditable(false);
@@ -445,14 +460,17 @@ public class LibrarySystemGUI extends JFrame {
         
         // Wrap headerArea in a panel to control its alignment
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        headerPanel.setBackground(Color.WHITE);
         headerPanel.add(headerArea);
         panel.add(headerPanel, BorderLayout.CENTER); // Place header in CENTER for vertical flexibility
 
         // Button panel
         JPanel buttonPanel = new JPanel(new GridLayout(9, 1, 9, 9));//increase gap
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topPanel.setBackground(Color.WHITE);
         JButton fullScreenButton = new JButton("Full Screen");
         fullScreenButton.setFont(new Font("SansSerif", Font.PLAIN, 16)); //make button size bigger
         topPanel.add(fullScreenButton);
@@ -583,26 +601,26 @@ public class LibrarySystemGUI extends JFrame {
             return;
         }
 
-        int count = currentPatron.getBooksCheckedOut().CountNode();
+        int count = queueHead.getBooksCheckedOut().CountNode(); 
         if (count == 1) {
-            currentPatron.getBooksCheckedOut().changeAllAvailability();
+        	queueHead.getBooksCheckedOut().changeAllAvailability();
             patronQ.dequeue();
-            JOptionPane.showMessageDialog(this, "Book returned successfully!");
+            JOptionPane.showMessageDialog(this,  "Book with title ' "+queueHead.getBooksCheckedOut().getHead().getData().getTitle()+" ' returned successfully!");
         } else if (count > 1) {
             int returnAll = JOptionPane.showConfirmDialog(this, "Return all books?", "Confirm", JOptionPane.YES_NO_OPTION);
             if (returnAll == JOptionPane.YES_OPTION) {
-                currentPatron.getBooksCheckedOut().changeAllAvailability();
+            	queueHead.getBooksCheckedOut().changeAllAvailability();
                 patronQ.dequeue();
                 JOptionPane.showMessageDialog(this, "Books returned successfully!");
             } else {
                 JTextArea booksArea = new JTextArea(15, 40);
-                booksArea.setText(currentPatron.getBooksCheckedOut().displayListString());
+                booksArea.setText(queueHead.getBooksCheckedOut().displayListString());
                 JOptionPane.showMessageDialog(this, new JScrollPane(booksArea), "Your Checked Out Books", JOptionPane.PLAIN_MESSAGE);
                 String returnTitle = JOptionPane.showInputDialog("Enter title of book to return:");
-                if (returnTitle != null && currentPatron.getBooksCheckedOut().SearchForANode(returnTitle)) {
-                    currentPatron.getBooksCheckedOut().DeleteANode1(returnTitle);
-                    patronQ.addFront(currentPatron);
-                    JOptionPane.showMessageDialog(this, "Book returned successfully!");
+                if (returnTitle != null && queueHead.getBooksCheckedOut().SearchForANode(returnTitle)) {
+                	queueHead.getBooksCheckedOut().DeleteANode1(returnTitle);
+                    patronQ.addFront(queueHead);
+                    JOptionPane.showMessageDialog(this, "Book with title ' "+returnTitle+" ' returned successfully!");
                 } else {
                     JOptionPane.showMessageDialog(this, "You have not checked out a book with this title!");
                 }
