@@ -70,12 +70,19 @@ public class Logins_Registrationmethods {
 
     // GUI-friendly registration method
     public String register(String username) {
+    	PatronLinkedList patron = new PatronLinkedList();
+    	
+          
         if (username == null || username.trim().isEmpty()) {
             return "Username cannot be empty!";
         }
 
         if (username.equals("admin")) {
             return "Admin registration is not allowed!";
+        }
+        
+        if(patron.SearchForANode(username) != null) {
+        	return "Username already exits, choose a different username!";
         }
 
         String generatedPassword = Password.generateDefaultPassword();
@@ -112,8 +119,20 @@ public class Logins_Registrationmethods {
 
   //Register user method with parameter scanner
     public void registerUser(java.util.Scanner scanner) {
-        System.out.print("Enter a unique Username: ");
-        String username = scanner.nextLine();
+        int error; 
+        String username;
+        PatronLinkedList patron = new PatronLinkedList();
+    	do {
+    		error = 0;
+    		System.out.print("Enter a unique Username: ");
+            username = scanner.nextLine();
+            
+            if(patron.SearchForANode(username) != null) {
+            	error = 1;
+            	System.out.println("\nUsername already exits, choose a different username....\n");
+            }
+        }while(error !=  0);
+    	
 
         if (username.equals("admin")) {
             System.out.println("Admin registration is not allowed!");
@@ -127,7 +146,6 @@ public class Logins_Registrationmethods {
         newUser.savePasswordToFile();
 
         patroncount++;
-        PatronLinkedList patron = new PatronLinkedList();
         patron.InsertAtBack(new Patron(username));
         System.out.println("User registered successfully.");
     }
