@@ -68,7 +68,7 @@ public class Logins_Registrationmethods {
         return false; // Login failed
     }
 
-    // GUI-friendly registration method
+    // GUI-friendly registration methods
     public String register(String username) {
     	PatronLinkedList patron = new PatronLinkedList();
     	
@@ -92,6 +92,34 @@ public class Logins_Registrationmethods {
         patroncount++;
         return "User registered successfully. Your default password is: " + generatedPassword;
     }
+    
+    public String adminRegister(String username) {
+    	PatronLinkedList patron = new PatronLinkedList();
+    	
+          
+        if (username == null || username.trim().isEmpty()) {
+            return "Username cannot be empty!";
+        }
+
+        if (username.equals("admin")) {
+            return "Admin registration is not allowed!";
+        }
+        
+        if(patron.SearchForANode(username) != null) {
+        	return "Username already exits, choose a different username!";
+        }
+
+        String generatedPassword = Password.generateDefaultPassword();
+        Password newUser = new Password(username, generatedPassword);
+        newUser.savePasswordToFile();
+        Patron tempPatron = new Patron(username);
+        patron.InsertAtBack(tempPatron);
+        patroncount++;
+        System.out.println("User registered successfully. Your default password is: " + generatedPassword);
+        return "User registered successfully. Your default password is: " + generatedPassword;
+    }
+    
+    
 
     // GUI-friendly password change method
     public String changePassword(String username, String oldPassword, String newPassword, boolean isFirstLogin) {
