@@ -72,19 +72,9 @@ public class LibrarySystemGUI extends JFrame {
     }
     
     //Display logo
-    private String getLMSHeader() {
-        int totalWidth = 80;
+    private String getLMSHeader(int totalWidth) {
         String[] lines = {
-            "--------------------------------------------------------",
-            "***             ***** **      ** *****      *****",
-            "***             *****   **   **  *****     **   ",
-            "***             *****    ** **   *****       ***",
-            "***             *****            *****         ***",
-            "***             *****            *****           **",
-            "*************   *****            *****          **",
-            "*************   *****            *****     **** ",
-            "--------------------------------------------------------",
-            "----Library Management System----"
+            "       Library Management System"
         };
         StringBuilder centeredHeader = new StringBuilder();
         for (String line : lines) {
@@ -119,9 +109,9 @@ public class LibrarySystemGUI extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextArea headerArea = new JTextArea(getLMSHeader());
+        JTextArea headerArea = new JTextArea(getLMSHeader(38));
         headerArea.setEditable(false);
-        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        headerArea.setFont(new Font("Impact", Font.PLAIN, 32));
         headerArea.setBackground(contentPanel.getBackground());
 
         
@@ -186,7 +176,13 @@ public class LibrarySystemGUI extends JFrame {
                     success[0] = true;
                     dialog.dispose();
                 }
-            } else {
+            } else if(username.equals("") && password.equals("")) {
+            	JOptionPane.showMessageDialog(dialog, "Enter username and password to login.");
+             }else if(!username.equals("") && password.equals("")) {
+            	 JOptionPane.showMessageDialog(dialog, "Enter password to login.");
+             }else if(username.equals("") && !password.equals("")) {
+            	 JOptionPane.showMessageDialog(dialog, "Enter username to login.");
+             }else {
                 JOptionPane.showMessageDialog(dialog, "Incorrect username or password.");
                 userField.setText("");
                 passField.setText("");
@@ -197,6 +193,7 @@ public class LibrarySystemGUI extends JFrame {
             String username = userField.getText().trim();
             String result = login.register(username);
             JOptionPane.showMessageDialog(dialog, result);
+            System.out.println(result);//Easier to use back default password
             if (result.startsWith("User registered successfully")) {
                 // Add the new patron to patronList after successful registration
                 Patron newPatron = new Patron(username);
@@ -215,7 +212,7 @@ public class LibrarySystemGUI extends JFrame {
     //Change Password window
     private boolean changePasswordDialog(String username, String oldPassword) {
         JDialog changeDialog = new JDialog(this, "Change Password", true);
-        changeDialog.setSize(500, 300);
+        changeDialog.setSize(800, 300);
         changeDialog.setLocationRelativeTo(null);
         changeDialog.setLayout(new GridLayout(3, 2, 10, 10));
         changeDialog.setResizable(true);
@@ -260,9 +257,9 @@ public class LibrarySystemGUI extends JFrame {
         
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
-        JTextArea headerArea = new JTextArea(getLMSHeader());
+        JTextArea headerArea = new JTextArea(getLMSHeader(38));
         headerArea.setEditable(false);
-        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        headerArea.setFont(new Font("Impact", Font.PLAIN, 32));
         headerArea.setBackground(panel.getBackground());
         headerArea.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the text area horizontally
         headerArea.setLineWrap(false); // Prevent wrapping to maintain fixed width
@@ -371,9 +368,6 @@ public class LibrarySystemGUI extends JFrame {
                     } else if ( cardNumberStr != null) {
                     	JOptionPane.showMessageDialog(this, "Card number cannot be empty!");
                     }
-                
-                // Simulate "Press a key to go to menu..." with a simple OK dialog
-                JOptionPane.showMessageDialog(this, "Press any key to return to the menu.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 showAdminMenu(); // Return to admin menu
                 break;
 
@@ -449,9 +443,9 @@ public class LibrarySystemGUI extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         
-        JTextArea headerArea = new JTextArea(getLMSHeader());
+        JTextArea headerArea = new JTextArea(getLMSHeader(310));
         headerArea.setEditable(false);
-        headerArea.setFont(new Font("Monospaced", Font.PLAIN, 16));//LMS HEADER SIZE
+        headerArea.setFont(new Font("Impact", Font.PLAIN, 32));//LMS HEADER SIZE
         headerArea.setBackground(panel.getBackground());
         headerArea.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the text area horizontally
         headerArea.setLineWrap(false); // Prevent wrapping to maintain fixed width
