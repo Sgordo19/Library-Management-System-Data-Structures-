@@ -223,6 +223,7 @@ public class Logins_Registrationmethods {
 					temp = scannerR.next();
 					if(temp.equals(username)) {
 						System.out.println("Patron has been removed from Library System.");
+						scannerR.close();
 						return true;
 					}
 				}
@@ -232,6 +233,7 @@ public class Logins_Registrationmethods {
 				e.printStackTrace();
 			}
         }
+        
         return false; 
     }
     
