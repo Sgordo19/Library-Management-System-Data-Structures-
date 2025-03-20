@@ -459,6 +459,7 @@ public class LibrarySystemGUI extends JFrame {
 
     //Method to navigate Patron menu
     private void handlePatronAction(int choice, JDialog dialog) {
+    	bookManagement = new BookManagement();
         switch (choice) {
             case 1: // Search by title
                 String title = JOptionPane.showInputDialog("Enter book title:");
