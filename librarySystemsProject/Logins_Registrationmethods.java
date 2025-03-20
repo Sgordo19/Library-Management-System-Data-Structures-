@@ -1,3 +1,4 @@
+
 /*
 Names: 
 Jade Freeman: 2300078
@@ -81,7 +82,7 @@ public class Logins_Registrationmethods {
             return "Admin registration is not allowed!";
         }
         
-        if(patron.SearchForANode(username) != null) {
+        if(patron.SearchForANode(username) != null || checkRemoved(username)) {
         	return "Username already exits, choose a different username!";
         }
 
@@ -155,7 +156,7 @@ public class Logins_Registrationmethods {
     		System.out.print("Enter a unique Username: ");
             username = scanner.nextLine();
             
-            if(patron.SearchForANode(username) != null) {
+            if(patron.SearchForANode(username) != null || checkRemoved(username)) {
             	error = 1;
             	System.out.println("\nUsername already exits, choose a different username....\n");
             }
@@ -189,24 +190,11 @@ public class Logins_Registrationmethods {
         	patron = new Patron("admin",0); 
         	return true;
         }
-        File file = new File("RemovedPatrons.txt");
-        if(file.isFile()) {
-        	String temp; 
-        	try {
-				Scanner scannerR  = new Scanner(file);
-				while(scannerR.hasNext()) {
-					temp = scannerR.next();
-					if(username.equals(username)) {
-						System.out.println("Patron has been removed from Library System.");
-						return false;
-					}
-				}
-				scannerR.close();
-			} catch (FileNotFoundException e) {
-				System.err.println("Error, information could not be retrieved.");
-				e.printStackTrace();
-			}
+        
+        if(checkRemoved(username)) {
+        	return false;
         }
+        
         Password user = Password.getUserFromFile(username, password);
         if (user != null) {
             System.out.println("Login successful!");
@@ -224,6 +212,29 @@ public class Logins_Registrationmethods {
         }
     }
 
+    //Check if patron has been removed
+    public boolean checkRemoved(String username) {
+    	File file = new File("RemovedPatrons.txt");
+        if(file.isFile()) {
+        	String temp; 
+        	try {
+				Scanner scannerR  = new Scanner(file);
+				while(scannerR.hasNext()) {
+					temp = scannerR.next();
+					if(temp.equals(username)) {
+						System.out.println("Patron has been removed from Library System.");
+						return true;
+					}
+				}
+				scannerR.close();
+			} catch (FileNotFoundException e) {
+				System.err.println("Error, information could not be retrieved.");
+				e.printStackTrace();
+			}
+        }
+        return false; 
+    }
+    
     // Change Password on First login Method
     private void changePasswordOnFirstLogin(Password user, java.util.Scanner scanner) {
         System.out.println("\nWe would now like you to change your password!");
